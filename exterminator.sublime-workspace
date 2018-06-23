@@ -1,0 +1,609 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"clas",
+				"classname\tfunction"
+			],
+			[
+				"f",
+				"get_fname"
+			],
+			[
+				"get",
+				"get_all_assets"
+			],
+			[
+				"Ob",
+				"OBSERVABLE"
+			],
+			[
+				"att",
+				"attach"
+			],
+			[
+				"a",
+				"attachments\tstatement"
+			],
+			[
+				"fo",
+				"format\tfunction"
+			],
+			[
+				"Are",
+				"AttributeError\tclass"
+			],
+			[
+				"web",
+				"websockets"
+			],
+			[
+				"me",
+				"message"
+			],
+			[
+				"w",
+				"websocket"
+			],
+			[
+				"bu",
+				"blockquote\tTag"
+			],
+			[
+				"tag",
+				"tagcloud"
+			],
+			[
+				"c",
+				"check"
+			],
+			[
+				"au",
+				"autoTester"
+			],
+			[
+				"Fa",
+				"FastOverload"
+			],
+			[
+				"__r",
+				"__radd__"
+			],
+			[
+				"o",
+				"other"
+			],
+			[
+				"ha",
+				"hasOwnProperty"
+			],
+			[
+				"r",
+				"return"
+			],
+			[
+				"re",
+				"result"
+			],
+			[
+				"E",
+				"Empty"
+			],
+			[
+				"u",
+				"unpack"
+			],
+			[
+				"in",
+				"inputstr"
+			],
+			[
+				"str",
+				"stream"
+			],
+			[
+				"fu",
+				"function\tfunction"
+			],
+			[
+				"ul",
+				"ul_editor"
+			],
+			[
+				"LOc",
+				"Loc_Execute"
+			],
+			[
+				"l",
+				"level"
+			],
+			[
+				"lo",
+				"World.load_level(world, name, [callback_object]) : Level"
+			],
+			[
+				"W",
+				"World"
+			],
+			[
+				"LEv",
+				"LevelEditing"
+			],
+			[
+				"LevelEd",
+				"LevelEditing"
+			],
+			[
+				"sele",
+				"LevelEditing.selected_units(self)"
+			],
+			[
+				"Lee",
+				"LevelEditing"
+			],
+			[
+				"level",
+				"level_refs"
+			],
+			[
+				"ul_",
+				"ul_levels"
+			],
+			[
+				"lev",
+				"level_refs"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 345.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"git commit cu",
+				"git: quick stage current file and commit"
+			],
+			[
+				"git status",
+				"git: status"
+			],
+			[
+				"push",
+				"git: push"
+			],
+			[
+				"commit",
+				"git: quick stage current file and commit"
+			],
+			[
+				"pe",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"erro",
+				"Anaconda: Show error list"
+			],
+			[
+				"lint",
+				"Anaconda: Next lint error"
+			],
+			[
+				"lin",
+				"Anaconda: Next lint error"
+			],
+			[
+				"pep",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"err",
+				"Anaconda: Show error list"
+			],
+			[
+				"nex",
+				"Anaconda: Next lint error"
+			],
+			[
+				"pepe",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"git quick st",
+				"git: quick stage current file and commit"
+			],
+			[
+				"next ",
+				"Anaconda: Next lint error"
+			],
+			[
+				"prev",
+				"Anaconda: Previous lint error"
+			],
+			[
+				"previ",
+				"Anaconda: Previous lint error"
+			],
+			[
+				"previous l",
+				"Anaconda: Previous lint error"
+			],
+			[
+				"enable lin",
+				"Anaconda: Enable linting on this file"
+			],
+			[
+				"an",
+				"Anaconda: Disable linting on this file"
+			],
+			[
+				"anaconda erro",
+				"Anaconda: Show error list"
+			],
+			[
+				"git push",
+				"git: push"
+			],
+			[
+				"git stage",
+				"git: quick stage"
+			],
+			[
+				"git comm",
+				"git: quick commit"
+			],
+			[
+				"pr",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"preview",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"markdo",
+				"MarkdownEditing: Change color scheme..."
+			],
+			[
+				"",
+				"A File Icon: Revert to a Freshly Installed State"
+			],
+			[
+				"makrdo",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"ay",
+				"ayu: Activate theme"
+			],
+			[
+				"remove\t",
+				"Package Control: Remove Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"install p",
+				"Package Control: Install Package"
+			],
+			[
+				"package Control: r",
+				"Package Control: Remove Package"
+			],
+			[
+				"strapd",
+				"Strapdown.js Markdown: Preview in a browser"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 544.0
+	},
+	"console":
+	{
+		"height": 186.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/prj/exterminator"
+	],
+	"file_history":
+	[
+		"/D/prj/bab/utils.py",
+		"/C/Users/steve/Dropbox/Sync/Sublime Text/Transcrypt.sublime-build",
+		"/D/prj/bab/bab.py",
+		"/C/Users/steve/Dropbox/hermetic",
+		"/D/prj/tapriorities/PITCHME.md",
+		"/C/Users/steve/Desktop/__main__.py",
+		"/C/Users/steve/Desktop/xxx.py",
+		"/C/Users/steve/Desktop/qqq.py",
+		"/C/Users/steve/AppData/Local/Temp/18.html",
+		"/C/Users/steve/Desktop/unreal_test.py",
+		"/C/Users/steve/Desktop/bloop.py",
+		"/C/Users/steve/Dropbox/behavior.py",
+		"/D/prj/websocketsex/client.html",
+		"/D/prj/websocketsex/server.py",
+		"/D/prj/blog/source/content/blog/2014/TA_Bookstore_page.md",
+		"/D/prj/blog/source/content/pages/course/what-you-ll-need.md",
+		"/D/prj/blog/source/content/pages/course/2-1-basics-of-3d-rendering.md",
+		"/D/prj/blog/source/content/pages/course/2-10-animation-basics.md",
+		"/D/prj/blog/source/content/pages/course/2-11-creating-an-animation.md",
+		"/D/prj/blog/source/content/pages/course/2-12-animation-components.md",
+		"/D/prj/blog/source/content/pages/course/2-2-how-3d-models-work.md",
+		"/D/prj/blog/source/content/pages/course/2-3-3d-lighting.md",
+		"/D/prj/blog/source/content/pages/course/2-4-diffuse-lighting.md",
+		"/D/prj/blog/source/content/pages/course/2-5-specular-lighting.md",
+		"/D/prj/blog/source/content/pages/course/2-6-reflectivity.md",
+		"/D/prj/blog/source/content/pages/course/2-7-ambient-unlit.md",
+		"/D/prj/blog/source/content/pages/course/2-8-shaders-materials.md",
+		"/D/prj/blog/source/content/pages/course/2-9-lights.md",
+		"/D/prj/blog/source/content/pages/course/2-ex-1.md",
+		"/D/prj/blog/source/content/pages/course/3-1.md",
+		"/D/prj/blog/source/content/pages/course/3-2.md",
+		"/D/prj/blog/source/content/pages/course/4-1.md",
+		"/D/prj/blog/source/content/pages/course/4-10.md",
+		"/D/prj/blog/source/content/pages/course/4-11.md",
+		"/D/prj/blog/source/content/pages/course/4-12.md",
+		"/D/prj/blog/source/content/pages/course/4-13.md",
+		"/D/prj/blog/source/content/pages/course/4-14.md",
+		"/D/prj/blog/source/content/pages/course/4-15.md",
+		"/D/prj/blog/source/content/pages/course/4-16.md",
+		"/D/prj/blog/source/content/pages/course/4-17.md",
+		"/D/prj/blog/source/content/pages/course/4-18.md",
+		"/D/prj/blog/source/content/pages/course/4-19.md",
+		"/D/prj/blog/source/content/pages/course/4-2.md",
+		"/D/prj/blog/source/content/pages/course/4-20.md",
+		"/D/prj/blog/source/content/pages/course/4-21.md",
+		"/D/prj/blog/source/content/pages/course/4-22.md",
+		"/D/prj/blog/source/content/pages/course/4-23.md",
+		"/D/prj/blog/source/content/pages/course/4-24.md",
+		"/D/prj/blog/source/content/pages/course/4-25.md",
+		"/D/prj/blog/source/content/pages/course/4-3.md",
+		"/D/prj/blog/source/content/pages/course/4-4.md",
+		"/D/prj/blog/source/content/pages/course/4-5.md",
+		"/D/prj/blog/source/content/pages/course/4-6.md",
+		"/D/prj/blog/source/content/pages/course/4-7.md",
+		"/D/prj/blog/source/content/pages/course/4-8.md",
+		"/D/prj/blog/source/content/pages/course/4-9.md",
+		"/D/prj/blog/source/content/pages/course/5-1-flag-game.md",
+		"/D/prj/blog/source/content/pages/course/5-2.md",
+		"/D/prj/blog/source/content/pages/course/5-3.md",
+		"/D/prj/blog/source/content/pages/course/5-4-outline.md",
+		"/D/prj/blog/source/content/pages/course/course-description.md",
+		"/D/prj/blog/source/content/pages/course/course-outline.md",
+		"/D/prj/blog/source/content/pages/course/dummy.md",
+		"/D/prj/blog/source/content/pages/course/emergency-last-minute-excersize.md",
+		"/D/prj/blog/source/content/pages/course/ex1-1.md",
+		"/D/prj/blog/source/content/pages/course/ex1-2.md",
+		"/D/prj/blog/source/content/pages/course/ex1-3.md",
+		"/D/prj/blog/source/content/pages/course/ex1-4.md",
+		"/D/prj/blog/source/content/pages/course/ex1-5.md",
+		"/D/prj/blog/source/content/pages/course/ex1-6.md",
+		"/D/prj/blog/source/content/pages/course/ex1-7.md",
+		"/D/prj/blog/source/content/pages/course/ex1-8.md",
+		"/D/prj/blog/source/content/pages/course/ex1-9.md",
+		"/D/prj/blog/source/content/pages/course/excersize-1-bowling-game.md",
+		"/D/prj/blog/source/content/pages/course/glossary.md",
+		"/D/prj/blog/source/content/pages/course/rendering-excersize-exterminate.md",
+		"/D/prj/blog/source/content/pages/course/resources--2.md",
+		"/D/prj/blog/source/content/pages/course/week-1-intro-to-unity.md",
+		"/D/prj/blog/source/content/pages/course/week-2-environments.md",
+		"/D/prj/blog/source/content/pages/course/week-3-scripting.md",
+		"/D/prj/blog/source/content/pages/course/week-4-gui.md",
+		"/D/prj/blog/source/content/pages/course/week-5-putting-it-together.md",
+		"/D/prj/blog/pelican-plugins/tag_cloud/README.rst",
+		"/D/prj/blog/themes/pelican-alchemy/alchemy/templates/base.html",
+		"/D/prj/blog/content/content/blog/2017/mGui_2_2.md",
+		"/D/prj/blog/themes/pelican-blueidea/templates/base.html",
+		"/D/prj/blog/content/content/blog/2017/mGui_2_1.md",
+		"/D/prj/blog/content/pelicanconf.py",
+		"/D/prj/blog/content/content/blog/2015/Markdown_Wrapup.md",
+		"/D/prj/blog/content/content/blog/2014/wygwys.md",
+		"/D/prj/blog/themes/pelican-blueidea/static/css/main.css",
+		"/D/prj/blog/themes/pelican-alchemy/README.md",
+		"/C/Users/steve/Dropbox/quora/lettuce.md",
+		"/C/Users/steve/Dropbox/quora/Memmon.md",
+		"/C/Users/steve/AppData/Local/Temp/30.html",
+		"/D/prj/theodox.github.io/extra/pysteroids.html",
+		"/D/prj/Transcrypt/transcrypt/development/automated_tests/transcrypt/operator_overloading/__javascript__/__init__.mod.js",
+		"/D/prj/Numscrypt/README.rst",
+		"/D/prj/Transcrypt/transcrypt/demos/pysteroids_demo/pysteroids.html",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/numscrypt/__init__.py",
+		"/C/Program Files/Git/mingw64/share/doc/git-doc/git-branch.html",
+		"/C/Users/steve/Dropbox/quora/macedonians",
+		"/D/prj/Transcrypt/transcrypt/docs/sphinx/differences_cpython.rst",
+		"/D/prj/Transcrypt/transcrypt/docs/sphinx/special_facilities.rst",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/basics/__init__.py",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/basics/__javascript__/__init__.mod.js",
+		"/D/prj/Numscrypt/numscrypt/__init__.py",
+		"/D/prj/Numscrypt/numscrypt/__base__.py",
+		"/D/prj/Numscrypt/numscrypt/linalg/__init__.py",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/__javascript__/autotest.js",
+		"/C/Users/steve/Dropbox/colleges by region",
+		"/D/prj/Transcrypt/transcrypt/development/automated_tests/transcrypt/operator_overloading/__init__.py",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/autotest.html",
+		"/D/prj/Numscrypt/numscrypt/development/automated_tests/ndarray/autotest.py",
+		"/D/prj/Transcrypt/transcrypt/modules/org/transcrypt/__javascript__/__builtin__.mod.js",
+		"/C/Users/steve/Dropbox/Latin insults",
+		"/C/Users/steve/Dropbox/gdc 18 cfs",
+		"/C/Users/steve/Dropbox/Campus tour infoo",
+		"/C/Users/steve/Dropbox/Tech art interview questions.md",
+		"/D/UL/ue4/SyncLKG.bat",
+		"/C/Users/steve/OneDrive/Documents/Unreal Projects/MyProject2/Import/cone.fbx",
+		"/C/Users/steve/Desktop/bear-fbx.FBX",
+		"/C/Users/steve/AppData/Local/Temp/Temp1_Mixamo_Auto_Control_Rig_v_1_6_0.zip/Mixamo_Auto_Control_Rig_v_1_6_0_CHANGELOG.txt",
+		"/C/Users/steve/Downloads/amethyst_region_map-Windows-21-21.39.06.memreport",
+		"/C/Users/steve/AppData/Local/Temp/Temp1_Red9_StudioPack-2.00.zip/Red9_StudioPack-2.00/README.md",
+		"/C/Users/steve/AppData/Local/Temp/Temp1_Red9_StudioPack-2.00.zip/Red9_StudioPack-2.00/installer/How To - ReadMe.txt",
+		"/C/Users/steve/Downloads/UEDPCOpenWorldMaze-Windows-21-21.33.41.memreport",
+		"/C/Users/steve/Desktop/vpn/vpn.txt"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 140.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 56.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.GitSavvy":
+	{
+		"height": 174.0
+	},
+	"output.exec":
+	{
+		"height": 446.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.markdown":
+	{
+		"height": 174.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/MarkdownPreview/Markdown.sublime-build",
+	"project": "exterminator.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 266.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
