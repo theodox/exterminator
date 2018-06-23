@@ -10,7 +10,10 @@ import sys
 import linecache
 import cmd
 import bdb
-from repr import Repr
+try:
+    from repr import Repr
+except ImportError:
+    from reprlib import Repr
 import os
 import re
 import pprint
@@ -23,6 +26,7 @@ class Restart(Exception):
 
 # Create a custom safe Repr instance and increase its maxstring. The default of 30 truncates error messages too easily.
 
+
 _repr = Repr()
 _repr.maxstring = 255
 _saferepr = _repr.repr
@@ -31,7 +35,7 @@ __all__ = ["run", "pm", "Exterminator", "runeval", "runctx", "runcall", "set_tra
 
 
 def output(*args):
-    print (*args)
+    print(*args)
 
 
 def find_function(funcname, filename):
@@ -147,7 +151,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         if self._wait_for_mainpyfile:
             return
         if self.stop_here(frame):
-            output(self.stdout, '--Call--')
+            output('--Call--')
             self.interaction(frame, None)
 
     def user_line(self, frame):
@@ -163,7 +167,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         """
         Call every command that was set for the current active breakpoint (if there is one).
         Returns True if the normal interaction function must be called, False otherwise."""
-        
+
         # self.currentbp is set in bdb in Bdb.break_here if a breakpoint was hit
         if getattr(self, "currentbp", False) and self.currentbp in self.commands:
             currentbp = self.currentbp
@@ -186,7 +190,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         if self._wait_for_mainpyfile:
             return
         frame.f_locals['__return__'] = return_value
-        output(self.stdout, '--Return--')
+        output('--Return--')
         self.interaction(frame, None)
 
     def user_exception(self, frame, exc_info):
@@ -196,10 +200,11 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             return
         exc_type, exc_value, exc_traceback = exc_info
         frame.f_locals['__exception__'] = exc_type, exc_value
-        if type(exc_type) == type(''):
+        if type(exc_type) is str:
             exc_type_name = exc_type
-        else: exc_type_name = exc_type.__name__
-        output(self.stdout, exc_type_name + ':', _saferepr(exc_value))
+        else:
+            exc_type_name = exc_type.__name__
+        output(exc_type_name + ':', _saferepr(exc_value))
         self.interaction(frame, exc_traceback)
 
     # General interaction function
@@ -216,10 +221,11 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         """
         # reproduce the behavior of the standard displayhook, not printing None
         if obj is not None:
-            output( repr(obj))
+            output(repr(obj))
 
     def default(self, line):
-        if line[:1] == '!': line = line[1:]
+        if line[:1] == '!':
+            line = line[1:]
         locals = self.curframe_locals
         globals = self.curframe.f_globals
         try:
@@ -231,18 +237,18 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 sys.stdin = self.stdin
                 sys.stdout = self.stdout
                 sys.displayhook = self.displayhook
-                exec code in globals, locals
+                exec(code) in globals, locals
             finally:
                 sys.stdout = save_stdout
                 sys.stdin = save_stdin
                 sys.displayhook = save_displayhook
         except Exception:
             t, v = sys.exc_info()[:2]
-            if type(t) == type(''):
+            if type(t) is str:
                 exc_type_name = t
             else:
                 exc_type_name = t.__name__
-            output(self.stdout, '***', exc_type_name + ':', v)
+            output('***', exc_type_name + ':', v)
 
     def precmd(self, line):
         """Handle alias expansion and ';;' separator."""
@@ -327,7 +333,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             try:
                 bnum = int(arg)
             except Exception:
-                output(self.stdout, "Usage : commands [bnum]\n        ...\n        end")
+                output("Usage : commands [bnum]\n        ...\n        end")
                 return
         self.commands_bnum = bnum
         self.commands[bnum] = []
@@ -346,10 +352,12 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         # break [ ([filename:]lineno | function) [, "condition"] ]
         if not arg:
             if self.breaks:  # There's at least one
-                output(self.stdout, "Num Type         Disp Enb   Where")
+                output("Num Type         Disp Enb   Where")
                 for bp in bdb.Breakpoint.bpbynumber:
                     if bp:
-                        bp.bpprint(self.stdout)
+                        # todo -- this is not going to work until replaced
+                        # with something that does not take a stream
+                        bp.pprint(self.stdout)
             return
         # parse arguments; comma has lowest precedence
         # and cannot occur in filename
@@ -368,8 +376,8 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             filename = arg[:colon].rstrip()
             f = self.lookupmodule(filename)
             if not f:
-                output(self.stdout, '*** ', repr(filename),)
-                output(self.stdout, 'not found from sys.path')
+                output('*** ', repr(filename),)
+                output('not found from sys.path')
                 return
             else:
                 filename = f
@@ -377,7 +385,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             try:
                 lineno = int(arg)
             except ValueError:
-                output(self.stdout, '*** Bad lineno:', arg)
+                output('*** Bad lineno:', arg)
                 return
         else:
             # no colon; can be lineno or function
@@ -400,10 +408,10 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                     # last thing to try
                     (ok, filename, ln) = self.lineinfo(arg)
                     if not ok:
-                        output(self.stdout, '*** The specified object')
-                        output(self.stdout, repr(arg))
-                        output(self.stdout, 'is not a function')
-                        output(self.stdout, 'or was not found along sys.path.')
+                        output('*** The specified object')
+                        output(repr(arg))
+                        output('is not a function')
+                        output('or was not found along sys.path.')
                         return
                     funcname = ok
                     # ok contains a function name
@@ -416,10 +424,10 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             # now set the break point
             err = self.set_break(filename, line, temporary, cond, funcname)
             if err:
-                output(self.stdout, '***', err)
+                output('***', err)
             else:
                 bp = self.get_breaks(filename, line)[-1]
-                output(self.stdout, "Breakpoint {} at {}:{}".format(bp.number, bp.file, bp.line))
+                output("Breakpoint {} at {}:{}".format(bp.number, bp.file, bp.line))
 
     # To be overridden in derived debuggers
     def defaultFile(self):
@@ -479,12 +487,12 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         globs = self.curframe.f_globals if hasattr(self, 'curframe') else None
         line = linecache.getline(filename, lineno, globs)
         if not line:
-            output(self.stdout, 'End of file')
+            output('End of file')
             return 0
         line = line.strip()
         # Don't allow setting breakpoint at a blank line
         if (not line or (line[0] == '#') or (line[:3] == '"""') or line[:3] == "'''"):
-            output(self.stdout, '*** Blank or comment')
+            output('*** Blank or comment')
             return 0
         return lineno
 
@@ -494,11 +502,11 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             try:
                 i = int(i)
             except ValueError:
-                output(self.stdout, 'Breakpoint index {} is not a number'.format(i))
+                output('Breakpoint index {} is not a number'.format(i))
                 continue
 
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)):
-                output(self.stdout, 'No breakpoint numbered', i)
+                output('No breakpoint numbered', i)
                 continue
 
             bp = bdb.Breakpoint.bpbynumber[i]
@@ -511,11 +519,11 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             try:
                 i = int(i)
             except ValueError:
-                output(self.stdout, 'Breakpoint index {} is not a number'.format(i))
+                output('Breakpoint index {} is not a number'.format(i))
                 continue
 
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)):
-                output(self.stdout, 'No breakpoint numbered', i)
+                output('No breakpoint numbered', i)
                 continue
 
             bp = bdb.Breakpoint.bpbynumber[i]
@@ -529,7 +537,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             bpnum = int(args[0].strip())
         except ValueError:
             # something went wrong
-            output(self.stdout, 'Breakpoint index {} is not a number'.format(args[0]))
+            output('Breakpoint index {} is not a number'.format(args[0]))
             return
         try:
             cond = args[1]
@@ -538,13 +546,13 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         try:
             bp = bdb.Breakpoint.bpbynumber[bpnum]
         except IndexError:
-            output(self.stdout, 'Breakpoint index {} is not valid'.format(args[0]))
+            output('Breakpoint index {} is not valid'.format(args[0]))
             return
         if bp:
             bp.cond = cond
             if not cond:
-                output(self.stdout, 'Breakpoint', bpnum,)
-                output(self.stdout, 'is now unconditional.')
+                output('Breakpoint', bpnum,)
+                output('is now unconditional.')
 
     def do_ignore(self, arg):
         """arg is bp number followed by ignore count."""
@@ -553,7 +561,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             bpnum = int(args[0].strip())
         except ValueError:
             # something went wrong
-            output(self.stdout, 'Breakpoint index {} is not a number'.format(args[0]))
+            output('Breakpoint index {} is not a number'.format(args[0]))
             return
         try:
             count = int(args[1].strip())
@@ -562,7 +570,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         try:
             bp = bdb.Breakpoint.bpbynumber[bpnum]
         except IndexError:
-            output(self.stdout, 'Breakpoint index {} is not valid'.format(args[0]))
+            output('Breakpoint index {} is not valid'.format(args[0]))
             return
         if bp:
             bp.ignore = count
@@ -572,10 +580,10 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                     reply = reply + "{} crossings".format(count)
                 else:
                     reply = reply + '1 crossing'
-                output(self.stdout, reply + ' of breakpoint {}'.format(bpnum))
+                output(reply + ' of breakpoint {}'.format(bpnum))
             else:
-                output(self.stdout, 'Will stop next time breakpoint',)
-                output(self.stdout, bpnum, 'is reached.')
+                output('Will stop next time breakpoint',)
+                output(bpnum, 'is reached.')
 
     def do_clear(self, arg):
         """Three possibilities, tried in this order:
@@ -603,24 +611,24 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             else:
                 err = self.clear_break(filename, lineno)
             if err:
-                output(self.stdout, '***', err)
+                output('***', err)
             return
         numberlist = arg.split()
         for i in numberlist:
             try:
                 i = int(i)
             except ValueError:
-                output(self.stdout, 'Breakpoint index {} is not a number'.format(i))
+                output('Breakpoint index {} is not a number'.format(i))
                 continue
 
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)):
-                output(self.stdout, 'No breakpoint numbered', i)
+                output('No breakpoint numbered', i)
                 continue
             err = self.clear_bpbynumber(i)
             if err:
-                output(self.stdout, '***', err)
+                output('***', err)
             else:
-                output(self.stdout, 'Deleted breakpoint', i)
+                output('Deleted breakpoint', i)
     do_cl = do_clear  # 'c' is already an abbreviation for 'continue'
 
     def do_where(self, arg):
@@ -630,7 +638,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_up(self, arg):
         if self.curindex == 0:
-            output(self.stdout, '*** Oldest frame')
+            output('*** Oldest frame')
         else:
             self.curindex = self.curindex - 1
             self.curframe = self.stack[self.curindex][0]
@@ -641,7 +649,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_down(self, arg):
         if self.curindex + 1 == len(self.stack):
-            output(self.stdout, '*** Newest frame')
+            output('*** Newest frame')
         else:
             self.curindex = self.curindex + 1
             self.curframe = self.stack[self.curindex][0]
@@ -689,12 +697,12 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_jump(self, arg):
         if self.curindex + 1 != len(self.stack):
-            output(self.stdout, "*** You can only jump within the bottom frame")
+            output("*** You can only jump within the bottom frame")
             return
         try:
             arg = int(arg)
         except ValueError:
-            output(self.stdout, "*** The 'jump' command requires a line number.")
+            output("*** The 'jump' command requires a line number.")
         else:
             try:
                 # Do the jump, fix up our copy of the stack, and display the
@@ -702,8 +710,8 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 self.curframe.f_lineno = arg
                 self.stack[self.curindex] = self.stack[self.curindex][0], arg
                 self.print_stack_entry(self.stack[self.curindex])
-            except ValueError, e:
-                output(self.stdout, '*** Jump failed:', e)
+            except ValueError as e:
+                output('*** Jump failed:', e)
     do_j = do_jump
 
     def do_debug(self, arg):
@@ -712,9 +720,9 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         locals = self.curframe_locals
         p = Exterminator(self.completekey, self.stdin, self.stdout)
         p.prompt = "({}) ".format(self.prompt.strip())
-        output(self.stdout, "ENTERING RECURSIVE DEBUGGER")
+        output("ENTERING RECURSIVE DEBUGGER")
         sys.call_tracing(p.run, (arg, globals, locals))
-        output(self.stdout, "LEAVING RECURSIVE DEBUGGER")
+        output("LEAVING RECURSIVE DEBUGGER")
         sys.settrace(self.trace_dispatch)
         self.lastcmd = p.lastcmd
 
@@ -727,7 +735,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
     do_exit = do_quit
 
     def do_EOF(self, arg):
-        output(self.stdout)
+        output("")
         self._user_requested_quit = 1
         self.set_quit()
         return 1
@@ -742,18 +750,18 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             n = n + 1
         for i in range(n):
             name = co.co_varnames[i]
-            output(self.stdout, name, '=',)
+            output(name, '=',)
             if name in dct:
-                output(self.stdout, dct[name])
+                output(dct[name])
             else:
-                output(self.stdout, "*** undefined ***")
+                output("*** undefined ***")
     do_a = do_args
 
     def do_retval(self, arg):
         if '__return__' in self.curframe_locals:
-            output(self.stdout, self.curframe_locals['__return__'])
+            output(self.curframe_locals['__return__'])
         else:
-            output(self.stdout, '*** Not yet returned!')
+            output('*** Not yet returned!')
     do_rv = do_retval
 
     def _getval(self, arg):
@@ -766,18 +774,18 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 exc_type_name = t
             else:
                 exc_type_name = t.__name__
-            output(self.stdout, '***', exc_type_name + ':', repr(v))
+            output('***', exc_type_name + ':', repr(v))
             raise
 
     def do_p(self, arg):
         try:
-            output(self.stdout, repr(self._getval(arg)))
+            output(repr(self._getval(arg)))
         except Exception:
             pass
 
     def do_pp(self, arg):
         try:
-            pprint.pprint(self._getval(arg), self.stdout)
+            output(pprint.pformat(self._getval(arg)))
         except Exception:
             pass
 
@@ -787,7 +795,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         if arg:
             try:
                 x = eval(arg, {}, {})
-                if type(x) == type(()):
+                if type(x) is tuple:
                     first, last = x
                     first = int(first)
                     last = int(last)
@@ -797,7 +805,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 else:
                     first = max(1, int(x) - 5)
             except Exception:
-                output(self.stdout, '*** Error in argument:', repr(arg))
+                output('*** Error in argument:', repr(arg))
                 return
         elif self.lineno is None:
             first = max(1, self.curframe.f_lineno - 5)
@@ -808,20 +816,23 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         filename = self.curframe.f_code.co_filename
         breaklist = self.get_file_breaks(filename)
         try:
-            for lineno in range(first, last+1):
+            for lineno in range(first, last + 1):
                 line = linecache.getline(filename, lineno,
                                          self.curframe.f_globals)
                 if not line:
-                    output(self.stdout, '[EOF]')
+                    output('[EOF]')
                     break
                 else:
                     s = repr(lineno).rjust(3)
-                    if len(s) < 4: s = s + ' '
-                    if lineno in breaklist: s = s + 'B'
-                    else: s = s + ' '
+                    if len(s) < 4:
+                        s = s + ' '
+                    if lineno in breaklist:
+                        s = s + 'B'
+                    else:
+                        s = s + ' '
                     if lineno == self.curframe.f_lineno:
                         s = s + '->'
-                    output(self.stdout, s + '\t' + line,)
+                    output(s + '\t' + line,)
                     self.lineno = lineno
         except KeyboardInterrupt:
             pass
@@ -829,30 +840,34 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_whatis(self, arg):
         try:
-            value = eval(arg, self.curframe.f_globals,
-                            self.curframe_locals)
+            value = eval(arg, self.curframe.f_globals, self.curframe_locals)
         except Exception:
             t, v = sys.exc_info()[:2]
-            if type(t) == type(''):
+            if type(t) is str:
                 exc_type_name = t
-            else: exc_type_name = t.__name__
-            output(self.stdout, '***', exc_type_name + ':', repr(v))
+            else:
+                exc_type_name = t.__name__
+            output('***', exc_type_name + ':', repr(v))
             return
         code = None
         # Is it a function?
-        try: code = value.func_code
-        except Exception: pass
+        try:
+            code = value.func_code
+        except Exception:
+            pass
         if code:
-            output(self.stdout, 'Function', code.co_name)
+            output('Function', code.co_name)
             return
         # Is it an instance method?
-        try: code = value.im_func.func_code
-        except Exception: pass
+        try:
+            code = value.im_func.func_code
+        except Exception:
+            pass
         if code:
-            output(self.stdout, 'Method', code.co_name)
+            output('Method', code.co_name)
             return
         # None of the above...
-        output(self.stdout, type(value))
+        output(type(value))
 
     def do_alias(self, arg):
         args = arg.split()
@@ -860,10 +875,10 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             keys = self.aliases.keys()
             keys.sort()
             for alias in keys:
-                output(self.stdout, "{} = {}".format(alias, self.aliases[alias]))
+                output("{} = {}".format(alias, self.aliases[alias]))
             return
         if args[0] in self.aliases and len(args) == 1:
-            output(self.stdout, "{} = {}".format(args[0], self.aliases[args[0]]))
+            output("{} = {}".format(args[0], self.aliases[args[0]]))
         else:
             self.aliases[args[0]] = ' '.join(args[1:])
 
@@ -874,7 +889,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         if args[0] in self.aliases:
             del self.aliases[args[0]]
 
-    #list of all the commands making the program resume execution.
+    # list of all the commands making the program resume execution.
     commands_resuming = ['do_continue', 'do_step', 'do_next', 'do_return',
                          'do_quit', 'do_jump']
 
@@ -896,10 +911,10 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
     def print_stack_entry(self, frame_lineno, prompt_prefix=line_prefix):
         frame, lineno = frame_lineno
         if frame is self.curframe:
-            output(self.stdout, '>',)
+            output('>',)
         else:
-            output(self.stdout, ' ',)
-        output(self.stdout, self.format_stack_entry(frame_lineno, prompt_prefix))
+            output(' ',)
+        output(self.format_stack_entry(frame_lineno, prompt_prefix))
 
     # Help methods (derived from Exterminator.doc)
 
@@ -907,7 +922,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         self.help_h()
 
     def help_h(self):
-        output(self.stdout, """h(elp)
+        output("""h(elp)
 Without argument, print the list of available commands.
 With a command name as argument, print help about that command
 "help Exterminator" pipes the full documentation file to the $PAGER
@@ -917,7 +932,7 @@ With a command name as argument, print help about that command
         self.help_w()
 
     def help_w(self):
-        output(self.stdout, """w(here)
+        output("""w(here)
 Print a stack trace, with the most recent frame at the bottom.
 An arrow indicates the "current frame", which determines the
 context of most commands.  'bt' is an alias for this command.""")
@@ -928,7 +943,7 @@ context of most commands.  'bt' is an alias for this command.""")
         self.help_d()
 
     def help_d(self):
-        output(self.stdout, """d(own)
+        output("""d(own)
 Move the current frame one level down in the stack trace
 (to a newer frame).""")
 
@@ -936,7 +951,7 @@ Move the current frame one level down in the stack trace
         self.help_u()
 
     def help_u(self):
-        output(self.stdout, """u(p)
+        output("""u(p)
 Move the current frame one level up in the stack trace
 (to an older frame).""")
 
@@ -944,7 +959,7 @@ Move the current frame one level up in the stack trace
         self.help_b()
 
     def help_b(self):
-        output(self.stdout, """b(reak) ([file:]lineno | function) [, condition]
+        output("""b(reak) ([file:]lineno | function) [, condition]
 With a line number argument, set a break there in the current
 file.  With a function name, set a break at first executable line
 of that function.  Without argument, list all breaks.  If a second
@@ -960,8 +975,8 @@ the .py suffix may be omitted.""")
         self.help_cl()
 
     def help_cl(self):
-        output(self.stdout, "cl(ear) filename:lineno")
-        output(self.stdout, """cl(ear) [bpnumber [bpnumber...]]
+        output("cl(ear) filename:lineno")
+        output("""cl(ear) [bpnumber [bpnumber...]]
 With a space separated list of breakpoint numbers, clear
 those breakpoints.  Without argument, clear all breaks (but
 first ask confirmation).  With a filename:lineno argument,
@@ -973,21 +988,21 @@ a linenumber was used instead of either filename:lineno or
 breakpoint numbers.""")
 
     def help_tbreak(self):
-        output(self.stdout, """tbreak  same arguments as break, but breakpoint
+        output("""tbreak  same arguments as break, but breakpoint
 is removed when first hit.""")
 
     def help_enable(self):
-        output(self.stdout, """enable bpnumber [bpnumber ...]
+        output("""enable bpnumber [bpnumber ...]
 Enables the breakpoints given as a space separated list of
 bp numbers.""")
 
     def help_disable(self):
-        output(self.stdout, """disable bpnumber [bpnumber ...]
+        output("""disable bpnumber [bpnumber ...]
 Disables the breakpoints given as a space separated list of
 bp numbers.""")
 
     def help_ignore(self):
-        output(self.stdout, """ignore bpnumber count
+        output("""ignore bpnumber count
 Sets the ignore count for the given breakpoint number.  A breakpoint
 becomes active when the ignore count is zero.  When non-zero, the
 count is decremented each time the breakpoint is reached and the
@@ -995,7 +1010,7 @@ breakpoint is not disabled and any associated condition evaluates
 to true.""")
 
     def help_condition(self):
-        output(self.stdout, """condition bpnumber str_condition
+        output("""condition bpnumber str_condition
 str_condition is a string specifying an expression which
 must evaluate to true before the breakpoint is honored.
 If str_condition is absent, any existing condition is removed;
@@ -1005,7 +1020,7 @@ i.e., the breakpoint is made unconditional.""")
         self.help_s()
 
     def help_s(self):
-        output(self.stdout, """s(tep)
+        output("""s(tep)
 Execute the current line, stop at the first possible occasion
 (either in a function that is called or in the current function).""")
 
@@ -1021,7 +1036,7 @@ one is reached or until the current frame returns""")
         self.help_n()
 
     def help_n(self):
-        output(self.stdout, """n(ext)
+        output("""n(ext)
 Continue execution until the next line in the current function
 is reached or it returns.""")
 
@@ -1029,7 +1044,7 @@ is reached or it returns.""")
         self.help_r()
 
     def help_r(self):
-        output(self.stdout, """r(eturn)
+        output("""r(eturn)
 Continue execution until the current function returns.""")
 
     def help_continue(self):
@@ -1039,18 +1054,18 @@ Continue execution until the current function returns.""")
         self.help_c()
 
     def help_c(self):
-        output(self.stdout, """c(ont(inue))
+        output("""c(ont(inue))
 Continue execution, only stop when a breakpoint is encountered.""")
 
     def help_jump(self):
         self.help_j()
 
     def help_j(self):
-        output(self.stdout, """j(ump) lineno)
+        output("""j(ump) lineno)
 Set the next line that will be executed.""")
 
     def help_debug(self):
-        output(self.stdout, """debug code
+        output("""debug code
 Enter a recursive debugger that steps through the code argument
 (which is an arbitrary expression or statement to be executed
 in the current environment).""")
@@ -1059,7 +1074,7 @@ in the current environment).""")
         self.help_l()
 
     def help_l(self):
-        output(self.stdout, """l(ist) [first [,last]]
+        output("""l(ist) [first [,last]]
 List source code for the current file.
 Without arguments, list 11 lines around the current line
 or continue the previous listing.
@@ -1071,19 +1086,19 @@ if the second argument is less than the first, it is a count.""")
         self.help_a()
 
     def help_a(self):
-        output(self.stdout, """a(rgs)
+        output("""a(rgs)
 Print the arguments of the current function.""")
 
     def help_p(self):
-        output(self.stdout, """p expression
+        output("""p expression
 Print the value of the expression.""")
 
     def help_pp(self):
-        output(self.stdout, """pp expression
+        output("""pp expression
 Pretty-print the value of the expression.""")
 
     def help_exec(self):
-        output(self.stdout, """(!) statement
+        output("""(!) statement
 Execute the (one-line) statement in the context of
 the current stack frame.
 The exclamation point can be omitted unless the first word
@@ -1106,21 +1121,21 @@ History, breakpoints, actions and debugger options are preserved.
         self.help_q()
 
     def help_q(self):
-        output(self.stdout, """q(uit) or exit - Quit from the debugger.
+        output("""q(uit) or exit - Quit from the debugger.
 The program being executed is aborted.""")
 
     help_exit = help_q
 
     def help_whatis(self):
-        output(self.stdout, """whatis arg
+        output("""whatis arg
 Prints the type of the argument.""")
 
     def help_EOF(self):
-        output(self.stdout, """EOF
+        output("""EOF
 Handles the receipt of EOF as a command.""")
 
     def help_alias(self):
-        output(self.stdout, """alias [name [command [parameter parameter ...]]]
+        output("""alias [name [command [parameter parameter ...]]]
 Creates an alias called 'name' the executes 'command'.  The command
 must *not* be enclosed in quotes.  Replaceable parameters are
 indicated by %1, %2, and so on, while %* is replaced by all the
@@ -1144,11 +1159,11 @@ alias ps pi self
 """)
 
     def help_unalias(self):
-        output(self.stdout, """unalias name
+        output("""unalias name
 Deletes the specified alias.""")
 
     def help_commands(self):
-        output(self.stdout, """commands [bpnumber]
+        output("""commands [bpnumber]
 (com) ...
 (com) end
 (Exterminator)
@@ -1229,7 +1244,7 @@ see no sign that the breakpoint was reached.
         self._wait_for_mainpyfile = 1
         self.mainpyfile = self.canonic(filename)
         self._user_requested_quit = 0
-        statement = 'execfile({})'.format(filename)
+        statement = 'exec(open("./{}").read())'.format(filename)
         self.run(statement)
 
 # Simplified interface
@@ -1318,6 +1333,7 @@ def main():
     # changed by the user from the command line. There is a "restart" command
     # which allows explicit specification of command line arguments.
     exterminator = Exterminator()
+    
     while True:
         try:
             exterminator._runscript(mainpyfile)
