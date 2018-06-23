@@ -101,15 +101,11 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 self.rcLines.append(line)
             rcFile.close()
 
-        self.commands = {} # associates a command list to breakpoint numbers
-        self.commands_doprompt = {} # for each bp num, tells if the prompt
-                                    # must be disp. after execing the cmd list
-        self.commands_silent = {} # for each bp num, tells if the stack trace
-                                  # must be disp. after execing the cmd list
-        self.commands_defining = False # True while in the process of defining
-                                       # a command list
-        self.commands_bnum = None # The breakpoint number for which we are
-                                  # defining a list
+        self.commands = {}  # associates a command list to breakpoint numbers
+        self.commands_doprompt = {}  # for each bp num, tells if the prompt must be disp. after execing the cmd list
+        self.commands_silent = {}  # for each bp num, tells if the stack trace must be disp. after execing the cmd list
+        self.commands_defining = False  # True while in the process of defining a command list
+        self.commands_bnum = None  # The breakpoint number for which we aredefining a list
 
     def reset(self):
         bdb.Bdb.reset(self)
@@ -157,22 +153,19 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
     def user_line(self, frame):
         """This function is called when we stop or break at this line."""
         if self._wait_for_mainpyfile:
-            if (self.mainpyfile != self.canonic(frame.f_code.co_filename)
-                or frame.f_lineno<= 0):
+            if (self.mainpyfile != self.canonic(frame.f_code.co_filename) or frame.f_lineno <= 0):
                 return
             self._wait_for_mainpyfile = 0
         if self.bp_commands(frame):
             self.interaction(frame, None)
 
-    def bp_commands(self,frame):
-        """Call every command that was set for the current active breakpoint
-        (if there is one).
-
-        Returns True if the normal interaction function must be called,
-        False otherwise."""
+    def bp_commands(self, frame):
+        """
+        Call every command that was set for the current active breakpoint (if there is one).
+        Returns True if the normal interaction function must be called, False otherwise."""
+        
         # self.currentbp is set in bdb in Bdb.break_here if a breakpoint was hit
-        if getattr(self, "currentbp", False) and \
-               self.currentbp in self.commands:
+        if getattr(self, "currentbp", False) and self.currentbp in self.commands:
             currentbp = self.currentbp
             self.currentbp = 0
             lastcmd_back = self.lastcmd
@@ -327,13 +320,12 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
         Those commands will be executed whenever the breakpoint causes
         the program to stop execution."""
         if not arg:
-            bnum = len(bdb.Breakpoint.bpbynumber)-1
+            bnum = len(bdb.Breakpoint.bpbynumber) - 1
         else:
             try:
                 bnum = int(arg)
             except:
-                output(self.stdout, "Usage : commands [bnum]\n        ..." \)
-                                     "\n        end"
+                output(self.stdout, "Usage : commands [bnum]\n        ...\n        end")
                 return
         self.commands_bnum = bnum
         self.commands[bnum] = []
@@ -427,7 +419,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 output(self.stdout, '***', err)
             else:
                 bp = self.get_breaks(filename, line)[-1]
-                output(self.stdout, "Breakpoint %d at %s:%d".format(bp.number,bp.file, bp.line))
+                output(self.stdout, "Breakpoint {} at {}:{}".format(bp.number,bp.file, bp.line))
 
     # To be overridden in derived debuggers
     def defaultFile(self):
@@ -629,7 +621,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
                 output(self.stdout, '***', err)
             else:
                 output(self.stdout, 'Deleted breakpoint', i)
-    do_cl = do_clear # 'c' is already an abbreviation for 'continue'
+    do_cl = do_clear  # 'c' is already an abbreviation for 'continue'
 
     def do_where(self, arg):
         self.print_stack_trace()
@@ -742,15 +734,19 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_args(self, arg):
         co = self.curframe.f_code
-        dict = self.curframe_locals
+        dct = self.curframe_locals
         n = co.co_argcount
-        if co.co_flags & 4: n = n+1
-        if co.co_flags & 8: n = n+1
+        if co.co_flags & 4: 
+            n = n+1
+        if co.co_flags & 8: 
+            n = n+1
         for i in range(n):
             name = co.co_varnames[i]
             output(self.stdout, name, '=',)
-            if name in dict: output(self.stdout, dict[name])
-            else: output(self.stdout, "*** undefined ***")
+            if name in dct:
+                output(self.stdout, dct[name])
+            else: 
+                output(self.stdout, "*** undefined ***")
     do_a = do_args
 
     def do_retval(self, arg):
@@ -768,7 +764,8 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
             t, v = sys.exc_info()[:2]
             if isinstance(t, str):
                 exc_type_name = t
-            else: exc_type_name = t.__name__
+            else:
+                exc_type_name = t.__name__
             output(self.stdout, '***', exc_type_name + ':', repr(v))
             raise
 
@@ -872,7 +869,7 @@ class Exterminator(bdb.Bdb, cmd.Cmd):
 
     def do_unalias(self, arg):
         args = arg.split()
-        if len(args) == 0: 
+        if len(args) == 0:
             return
         if args[0] in self.aliases:
             del self.aliases[args[0]]
@@ -1052,7 +1049,7 @@ Continue execution, only stop when a breakpoint is encountered.""")
 
     def help_j(self):
         output(self.stdout, """j(ump) lineno)
-Set the next line that will be executed."""
+Set the next line that will be executed.""")
 
     def help_debug(self):
         output(self.stdout, """debug code
@@ -1279,32 +1276,35 @@ def pm():
 
 TESTCMD = 'import x; x.main()'
 
+
 def test():
     run(TESTCMD)
 
-# print help
+
 def help():
     for dirname in sys.path:
         fullname = os.path.join(dirname, 'Exterminator.doc')
         if os.path.exists(fullname):
-            sts = os.system('${PAGER-more} '+fullname)
-            if sts: print '*** Pager exit status:', sts
+            sts = os.system('${PAGER-more} ' + fullname)
+            if sts:
+                output('*** Pager exit status:', sts)
             break
     else:
-        print 'Sorry, can\'t find the help file "Exterminator.doc"',
-        print 'along the Python search path'
+        output("can't find the help file 'Exterminator.doc'")
+
 
 def main():
     if not sys.argv[1:] or sys.argv[1] in ("--help", "-h"):
-        print "usage: Exterminator.py scriptfile [arg] ..."
+        output("usage: Exterminator.py scriptfile [arg] ...")
         sys.exit(2)
 
     mainpyfile =  sys.argv[1]     # Get script filename
     if not os.path.exists(mainpyfile):
-        print 'Error:', mainpyfile, 'does not exist'
+        output('Error:', mainpyfile, 'does not exist')
         sys.exit(1)
 
-    del sys.argv[0]         # Hide "Exterminator.py" from argument list
+    del sys.argv[0]
+    # Hide "Exterminator.py" from argument list
 
     # Replace Exterminator's dir with script's dir in front of module search path.
     sys.path[0] = os.path.dirname(mainpyfile)
@@ -1319,28 +1319,28 @@ def main():
             Exterminator._runscript(mainpyfile)
             if Exterminator._user_requested_quit:
                 break
-            print "The program finished and will be restarted"
+            output("The program finished and will be restarted")
         except Restart:
-            print "Restarting", mainpyfile, "with arguments:"
-            print "\t" + " ".join(sys.argv[1:])
+            output("Restarting", mainpyfile, "with arguments:")
+            output("\t" + " ".join(sys.argv[1:]))
         except SystemExit:
             # In most cases SystemExit does not warrant a post-mortem session.
-            print "The program exited via sys.exit(). Exit status: ",
-            print sys.exc_info()[1]
+            output("The program exited via sys.exit(). Exit status: ",)
+            output(sys.exc_info()[1])
         except SyntaxError:
             traceback.print_exc()
             sys.exit(1)
         except:
             traceback.print_exc()
-            print "Uncaught exception. Entering post mortem debugging"
-            print "Running 'cont' or 'step' will restart the program"
+            output("Uncaught exception. Entering post mortem debugging")
+            output("Running 'cont' or 'step' will restart the program")
             t = sys.exc_info()[2]
             Exterminator.interaction(None, t)
-            print "Post mortem debugger finished. The " + mainpyfile + \
-                  " will be restarted"
+            output("Post mortem debugger finished. The ", mainpyfile, "will be restarted")
 
 
 # When invoked as main program, invoke the debugger on a script
 if __name__ == '__main__':
     import Exterminator
     Exterminator.main()
+    
